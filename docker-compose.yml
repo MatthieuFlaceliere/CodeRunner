@@ -1,6 +1,8 @@
 version: "3"
+name: CodeRunner
 services:
   rabbitmq:
+    container_name: rabbitmq
     image: "rabbitmq:management"
     restart: always
     ports:
@@ -11,5 +13,14 @@ services:
       RABBITMQ_DEFAULT_PASS: "admin" # Mot de passe par défaut
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/mnesia
+  code-runner:
+    container_name: code-runner
+    build:
+      context: ./code-runners/python-runner
+    restart: always
+    pids_limit: 60 # Limite le nombre de processus par conteneur
+    cpus: 0.5 # Limite la consommation CPU à 50%
+    mem_limit: 150M # Limite la consommation mémoire à 150 Mo
+
 volumes:
   rabbitmq-data:
