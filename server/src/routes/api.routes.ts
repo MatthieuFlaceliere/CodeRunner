@@ -5,7 +5,7 @@ const router: Router = express.Router();
 
 /**
  * @openapi
- * /api/run-code:
+ * /api/code/run:
  *  post:
  *    description: Run code
  *    tags: [Code]
@@ -25,11 +25,11 @@ const router: Router = express.Router();
  *       '200':
  *         description: Successful code execution
  */
-router.post('/run-code', apiController.runCode);
+router.post('/code/run', apiController.runCode);
 
 /**
  * @openapi
- * /api/code-result:
+ * /api/code/result:
  *  get:
  *    description: Get code result
  *    tags: [Code]
@@ -37,6 +37,6 @@ router.post('/run-code', apiController.runCode);
  *       '200':
  *         description: Successful code execution
  */
-router.get('/code-result', apiController.getCodeResult);
+router.get('/code/result', apiController.getCodeResult);
 
 export default router;
