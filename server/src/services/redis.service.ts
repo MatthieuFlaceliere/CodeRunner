@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import { CodeResult } from '../models/code.model';
 
 export class RedisService {
   private readonly client = createClient();
@@ -8,7 +9,7 @@ export class RedisService {
     this.client.connect();
   }
 
-  public saveResult(key: string, value: string): void {
+  public saveResult(key: string, value: CodeResult): void {
     this.client.setEx(key, this.TTL, JSON.stringify(value));
   }
 

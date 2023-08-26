@@ -29,10 +29,14 @@ router.post('/code/run', apiController.runCode);
 
 /**
  * @openapi
- * /api/code/result:
+ * /api/code/result/{key}:
  *  get:
  *    description: Get code result
  *    tags: [Code]
+ *    parameters:
+ *      - in: path
+ *        name: key
+ *        required: true
  *    responses:
  *       '200':
  *         description: Successful code execution

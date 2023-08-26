@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 import Dockerode from 'dockerode';
 import { RedisService } from './redis.service';
+import { CodeResult } from '../models/code.model';
 
 const HOST_CONFIG = {
   Memory: 150 * 1024 * 1024, // Limite la mémoire à 512 Mo
@@ -58,7 +59,11 @@ export class CodeRunner {
               return;
             }
 
-            this.saveResultToRedis(stdoutData + '\n' + data.StatusCode + '\n' + data.Error);
+            this.saveResultToRedis({
+              stderr: data?.StatusCode === 0 ? '' : stdoutData,
+              stdout: data?.StatusCode === 0 ? stdoutData : '',
+              code: data?.StatusCode,
+            });
 
             container.remove((err) => {
               if (err) {
@@ -74,7 +79,14 @@ export class CodeRunner {
     return this.keyResult;
   }
 
-  private saveResultToRedis(value: string): void {
+  private saveResultToRedis(value: CodeResult | string): void {
+    if (typeof value === 'string') {
+      value = {
+        stdout: '',
+        stderr: value,
+        code: 1,
+      };
+    }
     this.redisService.saveResult(this.keyResult, value);
   }
 

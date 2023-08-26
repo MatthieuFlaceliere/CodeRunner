@@ -7,13 +7,14 @@ export const runCode = (req: Request, res: Response): void => {
   const { src, lang } = req.body;
 
   const codeRunner = new CodeRunner();
+
   try {
     const keyResult = codeRunner.runCode(src, lang);
     const url = `${req.protocol}://${req.get('host')}/api/code/result/${keyResult}`;
     res.status(202).send(successResponse(url));
-  } catch (error: any) {
-    console.log('Error:', error);
-    res.status(500).send(errorResponse(error.message, 500));
+  } catch (error: unknown) {
+    if (error instanceof Error) res.status(500).send(errorResponse(error.message, 500));
+    else res.status(500).send(errorResponse('Internal server error', 500));
   }
 };
 
