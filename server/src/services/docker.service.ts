@@ -1,11 +1,19 @@
 import { randomBytes } from 'crypto';
 import Dockerode from 'dockerode';
+import { RedisService } from './redis.service';
+
+const HOST_CONFIG = {
+  Memory: 150 * 1024 * 1024, // Limite la mémoire à 512 Mo
+  MemorySwap: -1, // Désactive le memory swap
+  NanoCPUs: 1000000000, // Limite à 1 cœurs de CPU
+  PidsLimit: 10, // Limite à 10 processus
+};
 
 export class CodeRunner {
   docker: Dockerode;
   keyResult: string;
 
-  constructor() {
+  constructor(private readonly redisService = new RedisService()) {
     this.docker = new Dockerode();
     this.keyResult = this.createKeyResult();
   }
@@ -67,7 +75,7 @@ export class CodeRunner {
   }
 
   private saveResultToRedis(value: string): void {
-    console.log('Save result to redis', value);
+    this.redisService.saveResult(this.keyResult, value);
   }
 
   private options(src: string, lang: string): object {
@@ -76,11 +84,13 @@ export class CodeRunner {
         return {
           Image: 'python:3.8',
           Cmd: ['python', '-c', src],
+          HostConfig: HOST_CONFIG,
         };
       case 'javascript':
         return {
           Image: 'node:14',
           Cmd: ['node', '-e', src],
+          HostConfig: HOST_CONFIG,
         };
       default:
         throw new Error('Langage non supporté');

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import apiController from '../controllers/api.controller';
+import apiController from '../controllers/code.controller';
 
 const router: Router = express.Router();
 
@@ -37,6 +37,6 @@ router.post('/code/run', apiController.runCode);
  *       '200':
  *         description: Successful code execution
  */
-router.get('/code/result', apiController.getCodeResult);
+router.get('/code/result/:key', apiController.getCodeResult);
 
 export default router;
