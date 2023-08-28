@@ -2,7 +2,6 @@ import { randomBytes } from 'crypto';
 import Dockerode from 'dockerode';
 import { RedisService } from './redis.service';
 import { CodeResult } from '../models/code.model';
-import { captureRejectionSymbol } from 'events';
 
 const HOST_CONFIG = {
   Memory: 150 * 1024 * 1024, // Limite la mémoire à 512 Mo
