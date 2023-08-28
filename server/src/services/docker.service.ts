@@ -100,8 +100,20 @@ export class CodeRunner {
         };
       case 'javascript':
         return {
-          Image: 'node:14',
+          Image: 'node:18',
           Cmd: ['node', '-e', src],
+          HostConfig: HOST_CONFIG,
+        };
+      case 'c':
+        return {
+          Image: 'gcc:10',
+          Cmd: ['bash', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.c && gcc -o main main.c && ./main`],
+          HostConfig: HOST_CONFIG,
+        };
+      case 'cpp':
+        return {
+          Image: 'gcc:10',
+          Cmd: ['bash', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.cpp && gcc -o main main.cpp && ./main`],
           HostConfig: HOST_CONFIG,
         };
       default:
