@@ -17,7 +17,8 @@
           {
             "type": "attribute",
             "prefix": "app",
-            "style": "camelCase"
+            "style": "camelCase",
+            "endOfLine": "auto"
           }
         ],
         "@angular-eslint/component-selector": [
@@ -25,7 +26,8 @@
           {
             "type": "element",
             "prefix": "app",
-            "style": "kebab-case"
+            "style": "kebab-case",
+            "endOfLine": "auto"
           }
         ]
       }
@@ -41,7 +43,8 @@
         "prettier/prettier": [
           "error",
           {
-            "parser": "angular"
+            "parser": "angular",
+            "endOfLine": "auto"
           }
         ]
       }
