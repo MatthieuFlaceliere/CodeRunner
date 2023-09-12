@@ -12,11 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: cd client
-          npm install
+        run: 
+          cd client && npm install
       - name: Build
-        run: cd client
-          npm run build
+        run: cd client && npm run build
       - name: Deploy
         uses: jakejarvis/s3-sync-action@master
         with:
