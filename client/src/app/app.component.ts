@@ -27,7 +27,6 @@ export class AppComponent {
 
   constructor(private readonly codeService: CodeService) {
     this.code = this.languagesList.find((lang) => lang.key === this.selectedLanguage.key)?.code || '';
-    console.log('test');
   }
 
   get code(): string {
