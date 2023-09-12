@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CodeService } from './service/code.service';
 import { LanguagesList } from './models/languages';
+import { CodeResult } from './models/code';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,7 @@ export class AppComponent {
   }
 
   runCode() {
+    if (this.loading) return;
     this.loading = true;
     this.codeService.runCode({ src: this.code, lang: this.selectedLanguage.key }).subscribe((res) => {
       this.getCodeResult(res.data);
@@ -46,9 +48,11 @@ export class AppComponent {
   getCodeResult(url: string) {
     this.codeService.getCodeResult(url).subscribe((res) => {
       if (res.data === null) {
-        this.getCodeResult(url);
+        setTimeout(() => this.getCodeResult(url), 1000);
       } else {
-        this.output = JSON.stringify(res.data, null, 2);
+        const codeOutput: CodeResult = JSON.parse(res.data);
+        this.output = codeOutput.stdout;
+        this.output += codeOutput.stderr;
         this.loading = false;
       }
     });

@@ -16,7 +16,7 @@
       </select>
       <button
         type="button"
-        class="text-white bg-green-600 rounded-lg text-sm px-5 text-center w-16 font-bold"
+        class="text-white bg-green-600 rounded-lg text-sm px-5 text-center w-20 font-bold"
         (click)="runCode()"
       >
         <img *ngIf="loading" src="assets/loading.svg" alt="loading" />
@@ -35,6 +35,6 @@
     <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
   </div>
   <div class="bg-[#1e1e1e] border-l-gray-800 border-l-8 text-white">
-    {{ output }}
+    <pre>{{ output }}</pre>
   </div>
 </div>

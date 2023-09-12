@@ -1,6 +1,6 @@
 import { IResponse, IResponseError } from '../models/response.model';
 
-export const successResponse = (data: string | object, message?: string): IResponse => {
+export const successResponse = (data: string | null, message?: string): IResponse => {
   return {
     status: 'success',
     message: message || 'OK',

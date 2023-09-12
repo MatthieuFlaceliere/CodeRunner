@@ -1,7 +1,7 @@
 export interface IResponse {
   status: string;
   message: string;
-  data?: string | object;
+  data?: string | object | null;
   statusCode?: number;
 }
 

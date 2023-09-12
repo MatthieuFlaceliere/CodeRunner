@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import { CodeRunner } from '../services/docker.service';
+import { runCodeInDocker } from '../services/docker.service';
 import { successResponse, errorResponse } from '../services/response.service';
-import { RedisService } from '../services/redis.service';
+import { RedisClient } from '../index';
 
 export const runCode = (req: Request, res: Response): void => {
   const { src, lang } = req.body;
 
-  const codeRunner = new CodeRunner();
-
   try {
-    const keyResult = codeRunner.runCode(src, lang);
+    const keyResult = runCodeInDocker(src, lang);
+
     const url = `${req.protocol}://${req.get('host')}/api/code/result/${keyResult}`;
+
     res.status(202).send(successResponse(url));
   } catch (error: unknown) {
     if (error instanceof Error) res.status(500).send(errorResponse(error.message, 500));
@@ -20,9 +20,15 @@ export const runCode = (req: Request, res: Response): void => {
 
 export const getCodeResult = async (req: Request, res: Response): Promise<void> => {
   const { key } = req.params;
-  const redisService = new RedisService();
-  const result = await redisService.getResult(key);
-  res.status(200).send(successResponse(result ? JSON.parse(result) : null));
+
+  try {
+    const result = await RedisClient.get(key);
+
+    res.status(200).send(successResponse(result ?? null));
+  } catch (error: unknown) {
+    if (error instanceof Error) res.status(500).send(errorResponse(error.message, 500));
+    else res.status(500).send(errorResponse('Internal server error', 500));
+  }
 };
 
 export default {

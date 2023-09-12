@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
-import Dockerode from 'dockerode';
-import { RedisService } from './redis.service';
 import { CodeResult } from '../models/code.model';
+import { DockerClient } from '../index';
+import { RedisClient } from '../index';
 
 const HOST_CONFIG = {
   Memory: 150 * 1024 * 1024, // Limite la mémoire à 512 Mo
@@ -10,118 +10,110 @@ const HOST_CONFIG = {
   PidsLimit: 10, // Limite à 10 processus
 };
 
-export class CodeRunner {
-  docker: Dockerode;
-  keyResult: string;
+let keyResult = '';
 
-  constructor(private readonly redisService = new RedisService()) {
-    this.docker = new Dockerode();
-    this.keyResult = this.createKeyResult();
-  }
+export const runCodeInDocker = (src: string, lang: string): string => {
+  const createOptions = options(src, lang);
+  let stdoutData = '';
+  keyResult = createKeyResult();
 
-  /**
-   * Run code in a docker container
-   * @param src Code to run
-   * @param lang Language of the code
-   * @returns Key to get the result
-   * @throws Error if language is not supported
-   */
-  public runCode(src: string, lang: string): string {
-    const createOptions = this.options(src, lang);
+  console.log(
+    '========================================= Création du conteneur =========================================',
+  );
+  DockerClient.createContainer(createOptions, (err, container) => {
+    if (err || !container) {
+      saveResultToRedis('Erreur lors de la création du conteneur');
+      return;
+    }
 
-    let stdoutData = '';
-
-    this.docker.createContainer(createOptions, (err, container) => {
-      if (err || !container) {
-        this.saveResultToRedis('Erreur lors de la création du conteneur');
+    container.start((err) => {
+      if (err) {
+        saveResultToRedis('Erreur lors du démarrage du conteneur');
         return;
       }
 
-      container.start((err) => {
-        if (err) {
-          this.saveResultToRedis('Erreur lors du démarrage du conteneur');
+      container.attach({ stream: true, stdout: true, stderr: true }, (err, stream) => {
+        if (err || !stream) {
+          saveResultToRedis("Erreur lors de l'attachement du conteneur");
           return;
         }
 
-        container.attach({ stream: true, stdout: true, stderr: true }, (err, stream) => {
-          if (err || !stream) {
-            this.saveResultToRedis("Erreur lors de l'attachement du conteneur");
+        // stream?.on('data', (data) => {
+        //   stdoutData = data && data.slice(8).toString();
+        // });
+        // Add \n to stdout if multiple lines
+        stream?.on('data', (data) => {
+          stdoutData += data.slice(8).toString().toString();
+        });
+
+        container.wait((err, data) => {
+          if (err) {
+            saveResultToRedis("Erreur lors de l'exécution du conteneur");
             return;
           }
 
-          stream?.on('data', (data) => {
-            stdoutData = data && data.slice(8).toString();
+          saveResultToRedis({
+            stderr: data?.StatusCode === 0 ? '' : stdoutData,
+            stdout: data?.StatusCode === 0 ? stdoutData : '',
+            code: data?.StatusCode,
           });
 
-          container.wait((err, data) => {
+          container.remove((err) => {
             if (err) {
-              this.saveResultToRedis("Erreur lors de l'exécution du conteneur");
+              saveResultToRedis('Erreur lors de la suppression du conteneur');
               return;
             }
-
-            this.saveResultToRedis({
-              stderr: data?.StatusCode === 0 ? '' : stdoutData,
-              stdout: data?.StatusCode === 0 ? stdoutData : '',
-              code: data?.StatusCode,
-            });
-
-            container.remove((err) => {
-              if (err) {
-                this.saveResultToRedis('Erreur lors de la suppression du conteneur');
-                return;
-              }
-            });
           });
         });
       });
     });
+  });
 
-    return this.keyResult;
-  }
+  return keyResult;
+};
 
-  private saveResultToRedis(value: CodeResult | string): void {
-    if (typeof value === 'string') {
-      value = {
-        stdout: '',
-        stderr: value,
-        code: 1,
+const options = (src: string, lang: string): object => {
+  switch (lang) {
+    case 'python':
+      return {
+        Image: 'python:3.8',
+        Cmd: ['python', '-c', src],
+        HostConfig: HOST_CONFIG,
       };
-    }
-    this.redisService.saveResult(this.keyResult, value);
+    case 'javascript':
+      return {
+        Image: 'node:18',
+        Cmd: ['node', '-e', src],
+        HostConfig: HOST_CONFIG,
+      };
+    case 'c':
+      return {
+        Image: 'frolvlad/alpine-gxx',
+        Cmd: ['sh', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.c && gcc -o main main.c && ./main`],
+        HostConfig: HOST_CONFIG,
+      };
+    case 'cpp':
+      return {
+        Image: 'frolvlad/alpine-gxx',
+        Cmd: ['sh', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.cpp && g++ -o main main.cpp && ./main`],
+        HostConfig: HOST_CONFIG,
+      };
+    default:
+      throw new Error('Langage non supporté');
   }
+};
 
-  private options(src: string, lang: string): object {
-    switch (lang) {
-      case 'python':
-        return {
-          Image: 'python:3.8',
-          Cmd: ['python', '-c', src],
-          HostConfig: HOST_CONFIG,
-        };
-      case 'javascript':
-        return {
-          Image: 'node:18',
-          Cmd: ['node', '-e', src],
-          HostConfig: HOST_CONFIG,
-        };
-      case 'c':
-        return {
-          Image: 'gcc:10',
-          Cmd: ['bash', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.c && gcc -o main main.c && ./main`],
-          HostConfig: HOST_CONFIG,
-        };
-      case 'cpp':
-        return {
-          Image: 'gcc:10',
-          Cmd: ['bash', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.cpp && gcc -o main main.cpp && ./main`],
-          HostConfig: HOST_CONFIG,
-        };
-      default:
-        throw new Error('Langage non supporté');
-    }
+const saveResultToRedis = (value: CodeResult | string): void => {
+  if (typeof value === 'string') {
+    value = {
+      stdout: '',
+      stderr: value,
+      code: 1,
+    };
   }
+  RedisClient.setEx(keyResult, 86400, JSON.stringify(value));
+};
 
-  private createKeyResult(): string {
-    return randomBytes(16).toString('hex');
-  }
-}
+const createKeyResult = (): string => {
+  return randomBytes(16).toString('hex');
+};

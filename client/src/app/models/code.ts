@@ -18,5 +18,5 @@ export interface RunCodeSuccess {
 export interface ResultCodeSuccess {
   status: string;
   message: string;
-  data: CodeResult | null;
+  data: string | null;
 }
