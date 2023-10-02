@@ -1,40 +1,5 @@
 <app-header></app-header>
-<div class="h-10 bg-gray-800 border-b-white grid grid-flow-col grid-cols-3">
-  <div class="col-span-2 relative flex justify-end items-center">
-    <div class="p-[5px] ml-3 w-24 bg-[#1e1e1e] text-white bottom-0 left-0 absolute text-center">
-      <span>main.{{ selectedLanguage.extension }}</span>
-    </div>
-
-    <div class="h-4/5 flex flex-row">
-      <select
-        id="countries"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mr-7"
-        [(ngModel)]="selectedLanguage"
-        (change)="onLanguageChange()"
-      >
-        <option *ngFor="let language of languagesList" [ngValue]="language">{{ language.key }}</option>
-      </select>
-      <button
-        type="button"
-        class="text-white bg-green-600 rounded-lg text-sm px-5 text-center w-20 font-bold"
-        (click)="runCode()"
-      >
-        <img *ngIf="loading" src="assets/loading.svg" alt="loading" />
-        <span *ngIf="!loading">Run</span>
-      </button>
-    </div>
-  </div>
-  <div class="text-white relative">
-    <div class="p-[5px] ml-2 w-24 bg-[#1e1e1e] text-white bottom-0 absolute text-center">
-      <span>Output</span>
-    </div>
-  </div>
-</div>
-<div class="main-container grid grid-flow-col grid-cols-3">
-  <div class="col-span-2">
-    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
-  </div>
-  <div class="bg-[#1e1e1e] border-l-gray-800 border-l-8 text-white">
-    <pre>{{ output }}</pre>
-  </div>
+<div class="main">
+  <app-main-code></app-main-code>
+  <app-output></app-output>
 </div>

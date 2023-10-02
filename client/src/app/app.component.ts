@@ -27,7 +27,6 @@ export class AppComponent {
 
   constructor(private readonly codeService: CodeService) {
     this.code = this.languagesList.find((lang) => lang.key === this.selectedLanguage.key)?.code || '';
-    console.log('test');
   }
 
   get code(): string {
@@ -57,13 +56,5 @@ export class AppComponent {
         this.loading = false;
       }
     });
-  }
-
-  onLanguageChange() {
-    this.editorOptions = {
-      ...this.editorOptions,
-      language: this.selectedLanguage.key,
-    };
-    this.code = this.languagesList.find((lang) => lang.key === this.selectedLanguage.key)?.code || '';
   }
 }
