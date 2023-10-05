@@ -30,7 +30,7 @@ int main() {
   },
 ];
 
-interface Language {
+export interface Language {
   key: string;
   extension: string;
   code: string;
