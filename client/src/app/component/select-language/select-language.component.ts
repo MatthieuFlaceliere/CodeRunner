@@ -20,6 +20,10 @@ import { Language, LanguagesList } from 'src/app/models/languages';
         background-color: rgb(255, 255, 255, 0);
         color: var(--color-primary);
         cursor: pointer;
+        option {
+          background-color: var(--primary);
+          color: var(--color-primary);
+        }
       }
     `,
   ],
