@@ -1,5 +1,5 @@
 version: "3"
-name: CodeRunner
+name: code-runner
 services:
   redis:
     image: redis
@@ -8,5 +8,16 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+  database:
+    image: mariadb
+    container_name: database
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: coderunner
+    volumes:
+      - database-data:/var/lib/mysql
 volumes:
   redis-data:
+  database-data:
