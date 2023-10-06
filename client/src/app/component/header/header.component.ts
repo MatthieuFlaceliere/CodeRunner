@@ -5,6 +5,9 @@ import { Component } from '@angular/core';
   template: ` <nav>
     <div class="left-container">
       <a routerLink="/">
+        <div class="logo">
+          <img src="assets/logo.png" alt="" />
+        </div>
         <span>Code Runner</span>
       </a>
     </div>
@@ -17,8 +20,10 @@ import { Component } from '@angular/core';
         display: flex;
 
         .left-container {
-          align-items: start;
+          align-items: center;
           padding: 1rem;
+          display: flex;
+          flex-direction: row;
           a {
             display: flex;
             align-items: center;
@@ -26,6 +31,18 @@ import { Component } from '@angular/core';
               align-self: center;
               font-size: 1.5rem;
               font-weight: 600;
+            }
+            .logo {
+              width: 2rem;
+              height: 2rem;
+              margin-right: 0.7rem;
+              background-color: #c8c8c8;
+              border-radius: 0.5rem;
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
             }
           }
         }
