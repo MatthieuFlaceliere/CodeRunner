@@ -1,7 +1,13 @@
-<div class="left">
-  <app-problem-description></app-problem-description>
+<div #left class="left">
+  <app-problem-description class="card"></app-problem-description>
 </div>
-<div class="right">
-  <!-- <app-main-code></app-main-code>
-    <app-output></app-output> -->
+<div #separator class="separator">
+  <img src="assets/dot.svg" />
+</div>
+<div #right class="right">
+  <app-main-code class="card"></app-main-code>
+  <div #separator class="separator horizontal">
+    <img src="assets/dot.svg" />
+  </div>
+  <app-output class="card"></app-output>
 </div>

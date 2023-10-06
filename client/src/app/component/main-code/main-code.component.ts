@@ -6,7 +6,7 @@ import { CodeService } from 'src/app/service/code.service';
 @Component({
   selector: 'app-main-code',
   template: `
-    <div class="header">
+    <div class="card-header">
       <app-select-language (onLanguageChange)="onLanguageChange($event)"></app-select-language>
       <app-run-button (click)="runCode()"></app-run-button>
     </div>
@@ -14,28 +14,6 @@ import { CodeService } from 'src/app/service/code.service';
   `,
   styles: [
     `
-      :host {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 100%;
-        background-color: var(--code-editor-bg);
-        border-radius: 0.5rem;
-      }
-
-      .header {
-        background-color: var(--primary);
-        color: var(--color-primary);
-        padding: 6px 10px;
-        border-radius: 0.5rem 0.5rem 0 0;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 0.7px solid #e4f0ff63;
-        height: 25px;
-      }
-
       ngx-monaco-editor {
         flex-grow: 1;
       }

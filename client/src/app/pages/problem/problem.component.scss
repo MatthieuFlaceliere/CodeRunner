@@ -1,0 +1,54 @@
+:host {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  margin: 0;
+  padding: 6px 10px 10px 10px;
+  overflow-y: hidden;
+
+  .left {
+    height: 100%;
+    width: calc(40% - 4px);
+    min-width: 400px;
+  }
+
+  .separator {
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &.horizontal {
+      width: 100%;
+      height: 8px;
+      cursor: row-resize;
+
+      img {
+        transform: rotate(90deg);
+      }
+    }
+
+
+    &:hover {
+      background-color: var(--color-primary);
+    }
+  }
+
+  .right {
+    height: 100%;
+    width: calc(60% - 4px);
+    min-width: 300px;
+
+    app-main-code {
+      height: calc(60% - 4px);
+    }
+
+    app-output {
+      height: calc(40% - 4px);
+    }
+  }
+}

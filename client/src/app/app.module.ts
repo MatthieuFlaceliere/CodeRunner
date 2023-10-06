@@ -14,6 +14,7 @@ import { OutputComponent } from './component/output/output.component';
 import { ProblemDescriptionComponent } from './component/problem-description/problem-description.component';
 import { ProblemComponent } from './pages/problem/problem.component';
 import { SandboxComponent } from './pages/sandbox/sandbox.component';
+import { ProblemSelectionComponent } from './pages/problem-selection/problem-selection.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { SandboxComponent } from './pages/sandbox/sandbox.component';
     ProblemDescriptionComponent,
     ProblemComponent,
     SandboxComponent,
+    ProblemSelectionComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, MonacoEditorModule.forRoot(), FormsModule, HttpClientModule],
   providers: [],
