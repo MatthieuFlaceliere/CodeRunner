@@ -1,5 +1,5 @@
 import { randomBytes } from 'crypto';
-import { CodeResult } from '../models/code.model';
+import { ICodeResult } from '../models/code.model';
 import { DockerClient } from '../index';
 import { RedisClient } from '../index';
 
@@ -103,7 +103,7 @@ const options = (src: string, lang: string): object => {
   }
 };
 
-const saveResultToRedis = (value: CodeResult | string): void => {
+const saveResultToRedis = (value: ICodeResult | string): void => {
   if (typeof value === 'string') {
     value = {
       stdout: '',

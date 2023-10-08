@@ -7,6 +7,8 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import { corsConfig } from './middleware/cors';
 import { createClient } from 'redis';
 import Docker from 'dockerode';
+import mongoose from 'mongoose';
+import { hydrateDBService } from './services/hydrateDB.service';
 
 dotenv.config();
 
@@ -44,16 +46,33 @@ const main = async () => {
     console.log('⚡️[Docker] Docker is running');
     console.log('⚙️[Redis] Try to connect to Redis');
 
-    RedisClient.on('error', (err) => console.log('Redis error: \n', err));
+    RedisClient.on('error', (err) => console.log('❌ [Redis] error: \n', err));
 
     RedisClient.connect();
 
     RedisClient.on('connect', () => {
       console.log('⚡️[Redis] Redis is running');
-      // Start server
-      app.listen(port, () => {
-        console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-      });
+      console.log('⚙️[MongoDB] Try to connect to MongoDB');
+
+      mongoose
+        .connect(
+          'mongodb://' + process.env.MONGODB_HOST + ':' + process.env.MONGODB_PORT + '/' + process.env.MONGODB_DB,
+        )
+        .then(() => {
+          console.log('⚡️[MongoDB] MongoDB is running');
+
+          // Start server
+          app.listen(port, () => {
+            console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+
+            // Hydrate database
+            hydrateDBService();
+          });
+        })
+        .catch((err) => {
+          console.log('❌ [MongoDB] MongoDB is not running');
+          console.log(err);
+        });
     });
   });
 };

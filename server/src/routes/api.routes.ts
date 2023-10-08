@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
-import apiController from '../controllers/code.controller';
+import codeController from '../controllers/code.controller';
+import problemController from '../controllers/problem.controller';
 
 const router: Router = express.Router();
 
@@ -25,7 +26,7 @@ const router: Router = express.Router();
  *       '200':
  *         description: Successful code execution
  */
-router.post('/code/run', apiController.runCode);
+router.post('/code/run', codeController.runCode);
 
 /**
  * @openapi
@@ -41,6 +42,138 @@ router.post('/code/run', apiController.runCode);
  *       '200':
  *         description: Successful code execution
  */
-router.get('/code/result/:key', apiController.getCodeResult);
+router.get('/code/result/:key', codeController.getCodeResult);
+
+/**
+ * @openapi
+ * /api/problems:
+ *  get:
+ *    description: Get all problems
+ *    tags: [Problem]
+ *    responses:
+ *      '200':
+ *        description: Successful request
+ */
+router.get('/problems', problemController.getProblems);
+
+/**
+ * @openapi
+ * /api/problem/{id}:
+ *  get:
+ *    description: Get problem by id
+ *    tags: [Problem]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *    responses:
+ *      '200':
+ *        description: Successful request
+ */
+router.get('/problem/:id', problemController.getProblem);
+
+/**
+ * @openapi
+ * /api/problem:
+ *   post:
+ *     description: Create a new problem
+ *     tags: [Problem]
+ *     requestBody:
+ *       description: Problem to be created
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               difficulty:
+ *                 type: string
+ *                 enum: [easy, medium, hard]
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               testCases:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     input:
+ *                       type: string
+ *                     output:
+ *                       type: string
+ *       required:
+ *         - title
+ *         - description
+ *         - difficulty
+ *         - tags
+ *         - testCases
+ *     responses:
+ *       '201':
+ *         description: Successful request
+ */
+router.post('/problem', problemController.createProblem);
+
+/**
+ * @openapi
+ * /api/problem/{id}:
+ *   put:
+ *     description: Modify a problem
+ *     tags: [Problem]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     requestBody:
+ *       description: Problem to be modified
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               difficulty:
+ *                 type: string
+ *                 enum: [easy, medium, hard]
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               testCases:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     input:
+ *                       type: string
+ *                     output:
+ *                       type: string
+ *     responses:
+ *       '200':
+ *         description: Successful request
+ */
+router.put('/problem/:id', problemController.modifyProblem);
+
+/**
+ * @openapi
+ * /api/problem/{id}:
+ *   delete:
+ *     description: Delete a problem
+ *     tags: [Problem]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       '200':
+ *         description: Successful request
+ */
+router.delete('/problem/:id', problemController.deleteProblem);
 
 export default router;
