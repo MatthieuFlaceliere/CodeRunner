@@ -50,7 +50,7 @@ export const hydrateDBService = () => {
               output: '[0, 1]',
             },
           ],
-          solutions: [
+          baseCodes: [
             {
               language: 'javascript',
               code: `
@@ -130,7 +130,7 @@ vector<int> twoSum(vector<int>& nums, int target) {
               output: '55',
             },
           ],
-          solutions: [
+          baseCodes: [
             {
               language: 'javascript',
               code: `
@@ -208,7 +208,7 @@ int fibonacci(int n) {
               output: '[1, 2, 3, 4, 5]',
             },
           ],
-          solutions: [
+          baseCodes: [
             {
               language: 'javascript',
               code: `
@@ -287,7 +287,7 @@ void insertionSort(vector<int>& arr) {
               output: 'false',
             },
           ],
-          solutions: [
+          baseCodes: [
             {
               language: 'javascript',
               code: `
@@ -369,7 +369,7 @@ bool isPalindrome(string s) {
               output: '23',
             },
           ],
-          solutions: [
+          baseCodes: [
             {
               language: 'javascript',
               code: `

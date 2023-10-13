@@ -105,7 +105,7 @@ router.get('/problem/:id', problemController.getProblem);
  *                       type: object
  *                     output:
  *                       type: string
- *               solutions:
+ *               baseCodes:
  *                 type: array
  *                 items:
  *                   type: object
@@ -163,7 +163,7 @@ router.post('/problem', problemController.createProblem);
  *                       type: object
  *                     output:
  *                       type: string
- *               solutions:
+ *               baseCodes:
  *                 type: array
  *                 items:
  *                   type: object

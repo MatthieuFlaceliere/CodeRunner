@@ -8,7 +8,7 @@ export interface IProblem {
     input: object;
     output: string;
   }[];
-  solutions: {
+  baseCodes: {
     language: string;
     code: string;
   }[];

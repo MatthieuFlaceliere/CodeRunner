@@ -40,14 +40,14 @@ export class MainCodeForProblemComponent {
     language: this.selectedLanguage.key,
   };
 
-  solutions: { language: string; code: string }[] = [];
+  baseCodes: { language: string; code: string }[] = [];
   code: string | null = null;
 
   constructor(private readonly problemService: ProblemService) {
     this.problemService.problem$.subscribe({
       next: (problem) => {
-        this.code = problem.solutions.find((solution) => solution.language === this.selectedLanguage.key)?.code || '';
-        this.solutions = problem.solutions;
+        this.code = problem.baseCodes.find((baseCode) => baseCode.language === this.selectedLanguage.key)?.code || '';
+        this.baseCodes = problem.baseCodes;
       },
       error: (err) => console.log(err),
     });
@@ -64,7 +64,7 @@ export class MainCodeForProblemComponent {
       ...this.editorOptions,
       language: this.selectedLanguage.key,
     };
-    this.code = this.solutions.find((solution) => solution.language === this.selectedLanguage.key)?.code || '';
+    this.code = this.baseCodes.find((baseCode) => baseCode.language === this.selectedLanguage.key)?.code || '';
   }
 
   runTests() {}

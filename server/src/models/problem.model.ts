@@ -10,7 +10,7 @@ export interface IProblem {
     input: object;
     output: string;
   }[];
-  solutions: {
+  baseCodes: {
     language: string;
     code: string;
   }[];
@@ -59,7 +59,7 @@ const problemSchema = new Schema<IProblem>(
     },
     tags: [String],
     testCases: [testCasesSchema],
-    solutions: [solutionsSchema],
+    baseCodes: [solutionsSchema],
   },
   { timestamps: true },
 );
