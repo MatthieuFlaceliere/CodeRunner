@@ -1,13 +1,33 @@
 <div #left class="left">
   <app-problem-description class="card"></app-problem-description>
 </div>
-<div #separator class="separator">
+<div #vseparator class="separator" (mousedown)="onMouseDownVertical()">
   <img src="assets/dot.svg" />
 </div>
 <div #right class="right">
-  <app-main-code class="card"></app-main-code>
-  <div #separator class="separator horizontal">
+  <div #top class="top">
+    <app-main-code-for-problem class="card"></app-main-code-for-problem>
+  </div>
+  <div #hseparator class="separator horizontal" (mousedown)="onMouseDownHorizontal()">
     <img src="assets/dot.svg" />
   </div>
-  <app-output class="card"></app-output>
+  <div #bottom class="bottom card">
+    <div class="card-header">
+      <div class="start">
+        <div [ngStyle]="selectedPane == 0 ? { 'border-bottom': '1px solid white' } : {}">
+          <a (click)="selectedPane = 0"> Test Case </a>
+        </div>
+        <div [ngStyle]="selectedPane == 1 ? { 'border-bottom': '1px solid white' } : {}">
+          <a (click)="selectedPane = 1"> Output </a>
+        </div>
+      </div>
+      <div class="end">
+        <div class="toggle" (click)="toggleBottomCard()">
+          <img src="assets/arrow.svg" [style]="bottomCardIsOpen ? { transform: 'rotate(180deg)' } : {}" />
+        </div>
+      </div>
+    </div>
+    <app-test-case [hidden]="selectedPane == 1"></app-test-case>
+    <app-output [header]="false" [hidden]="selectedPane == 0"></app-output>
+  </div>
 </div>

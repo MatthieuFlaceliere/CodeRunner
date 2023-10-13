@@ -32,7 +32,6 @@
       }
     }
 
-
     &:hover {
       background-color: var(--color-primary);
     }
@@ -41,13 +40,35 @@
   .right {
     height: 100%;
     width: calc(60% - 4px);
-    min-width: 300px;
+    min-width: 400px;
 
-    app-main-code {
+    .top {
+      min-height: 200px;
       height: calc(60% - 4px);
     }
 
-    app-output {
+    .bottom {
+      overflow: hidden;
+      .card-header {
+        justify-content: space-between;
+        .start {
+          display: flex;
+          flex-direction: row;
+          div {
+            margin-right: 1rem;
+          }
+        }
+        .end {
+          .toggle {
+            padding: 2px 0;
+          }
+        }
+        div {
+          height: 25px;
+          cursor: pointer;
+        }
+      }
+      min-height: 37.8px;
       height: calc(40% - 4px);
     }
   }

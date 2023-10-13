@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Code, CodeResult, ResultCodeSuccess, RunCodeSuccess } from '../models/code';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,11 @@ export class CodeService {
     if (this.loading) return;
 
     this.toogleLoading();
-    this.http.post<RunCodeSuccess>('http://localhost:3000/api/code/run', code).subscribe(
-      (res) => {
+    this.http.post<RunCodeSuccess>(environment.apiBaseUrl + '/code/run', code).subscribe({
+      next: (res) => {
         this.getCodeResult(res.data);
       },
-      (err) => {
+      error: (err) => {
         this.setOutput({
           stdout: '',
           stderr: 'Something went wrong\n Please try again later',
@@ -35,18 +36,28 @@ export class CodeService {
         });
         this.toogleLoading();
       },
-    );
+    });
   }
 
   getCodeResult(url: string) {
-    this.http.get<ResultCodeSuccess>(url).subscribe((res) => {
-      if (res.data === null) {
-        setTimeout(() => this.getCodeResult(url), 1000);
-      } else {
-        const codeOutput: CodeResult = JSON.parse(res.data);
-        this.setOutput(codeOutput);
+    this.http.get<ResultCodeSuccess>(url).subscribe({
+      next: (res) => {
+        if (res.data === null) {
+          setTimeout(() => this.getCodeResult(url), 1000);
+        } else {
+          const codeOutput: CodeResult = JSON.parse(res.data);
+          this.setOutput(codeOutput);
+          this.toogleLoading();
+        }
+      },
+      error: (err) => {
+        this.setOutput({
+          stdout: '',
+          stderr: 'Something went wrong\n Please try again later',
+          code: 1,
+        });
         this.toogleLoading();
-      }
+      },
     });
   }
 

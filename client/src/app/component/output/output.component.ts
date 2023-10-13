@@ -4,7 +4,7 @@ import { CodeService } from 'src/app/service/code.service';
 @Component({
   selector: 'app-output',
   template: `
-    <div class="card-header">Output</div>
+    <div class="card-header" *ngIf="header">Output</div>
     <pre #outputElement>{{ output }}</pre>
   `,
   styles: [
@@ -33,6 +33,8 @@ import { CodeService } from 'src/app/service/code.service';
 export class OutputComponent {
   output!: string;
   code!: number;
+
+  @Input() header: boolean = true;
 
   @ViewChild('outputElement') outputElement!: ElementRef<HTMLPreElement>;
 

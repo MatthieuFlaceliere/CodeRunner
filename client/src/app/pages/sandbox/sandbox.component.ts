@@ -29,7 +29,7 @@ export class SandboxComponent {
       const separatorWidth = (this.separator.nativeElement as HTMLElement).offsetWidth;
       const totalWidth = leftWidth + rightWidth + separatorWidth;
       // Calculate the mouse position in %
-      const mouseX = (event as MouseEvent).clientX;
+      const mouseX = (event as MouseEvent).clientX - 10;
       const leftWidthPercentageNew = (mouseX / totalWidth) * 100;
       const rightWidthPercentageNew = 100 - leftWidthPercentageNew;
       // Set the width of the left and right elements in % if they are greater than 400px and 300px respectively

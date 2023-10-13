@@ -15,6 +15,11 @@ import { ProblemDescriptionComponent } from './component/problem-description/pro
 import { ProblemComponent } from './pages/problem/problem.component';
 import { SandboxComponent } from './pages/sandbox/sandbox.component';
 import { ProblemSelectionComponent } from './pages/problem-selection/problem-selection.component';
+import { ProblemRowComponent } from './component/problem-row/problem-row.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { DifficultyColorDirective } from './directives/difficulty-color.directive';
+import { TestCaseComponent } from './component/test-case/test-case.component';
+import { MainCodeForProblemComponent } from './component/main-code-for-problem/main-code-for-problem.component';
 
 @NgModule({
   declarations: [
@@ -28,8 +33,19 @@ import { ProblemSelectionComponent } from './pages/problem-selection/problem-sel
     ProblemComponent,
     SandboxComponent,
     ProblemSelectionComponent,
+    ProblemRowComponent,
+    DifficultyColorDirective,
+    TestCaseComponent,
+    MainCodeForProblemComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, MonacoEditorModule.forRoot(), FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MonacoEditorModule.forRoot(),
+    FormsModule,
+    HttpClientModule,
+    NgxSkeletonLoaderModule.forRoot(),
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
