@@ -10,31 +10,30 @@ const HOST_CONFIG = {
   PidsLimit: 10, // Limite à 10 processus
 };
 
-let keyResult = '';
-
 export const runCodeInDocker = (src: string, lang: string): string => {
+  let keyResult = '';
   const createOptions = options(src, lang);
   let stdoutData = '';
   keyResult = createKeyResult();
 
-  console.log(
-    '========================================= Création du conteneur =========================================',
-  );
+  console.log(' Création du conteneur ');
   DockerClient.createContainer(createOptions, (err, container) => {
     if (err || !container) {
-      saveResultToRedis('Erreur lors de la création du conteneur');
+      saveResultToRedis('Erreur lors de la création du conteneur', keyResult);
       return;
     }
 
     container.start((err) => {
+      console.log(' Démarrage du conteneur ');
       if (err) {
-        saveResultToRedis('Erreur lors du démarrage du conteneur');
+        saveResultToRedis('Erreur lors du démarrage du conteneur', keyResult);
         return;
       }
 
       container.attach({ stream: true, stdout: true, stderr: true }, (err, stream) => {
+        console.log(' Attachement du conteneur ');
         if (err || !stream) {
-          saveResultToRedis("Erreur lors de l'attachement du conteneur");
+          saveResultToRedis("Erreur lors de l'attachement du conteneur", keyResult);
           return;
         }
 
@@ -47,23 +46,28 @@ export const runCodeInDocker = (src: string, lang: string): string => {
         });
 
         container.wait((err, data) => {
+          console.log(' Attente de la fin du conteneur ', stdoutData);
           if (err) {
-            saveResultToRedis("Erreur lors de l'exécution du conteneur");
+            saveResultToRedis("Erreur lors de l'exécution du conteneur", keyResult);
             return;
           }
 
-          saveResultToRedis({
-            stderr: data?.StatusCode === 0 ? '' : stdoutData,
-            stdout: data?.StatusCode === 0 ? stdoutData : '',
-            code: data?.StatusCode,
-          });
+          console.log(' Suppression du conteneur ');
+          saveResultToRedis(
+            {
+              stderr: data?.StatusCode === 0 ? '' : stdoutData,
+              stdout: data?.StatusCode === 0 ? stdoutData : '',
+              code: data?.StatusCode,
+            },
+            keyResult,
+          );
 
-          container.remove((err) => {
-            if (err) {
-              saveResultToRedis('Erreur lors de la suppression du conteneur');
-              return;
-            }
-          });
+          // container.remove((err) => {
+          //   if (err) {
+          //     saveResultToRedis('Erreur lors de la suppression du conteneur');
+          //     return;
+          //   }
+          // });
         });
       });
     });
@@ -103,7 +107,7 @@ const options = (src: string, lang: string): object => {
   }
 };
 
-const saveResultToRedis = (value: ICodeResult | string): void => {
+const saveResultToRedis = (value: ICodeResult | string, key: string): void => {
   if (typeof value === 'string') {
     value = {
       stdout: '',
@@ -111,7 +115,7 @@ const saveResultToRedis = (value: ICodeResult | string): void => {
       code: 1,
     };
   }
-  RedisClient.setEx(keyResult, 86400, JSON.stringify(value));
+  RedisClient.setEx(key, 86400, JSON.stringify(value));
 };
 
 const createKeyResult = (): string => {

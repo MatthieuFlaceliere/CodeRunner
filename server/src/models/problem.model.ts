@@ -7,10 +7,20 @@ export interface IProblem {
   difficulty: Difficulty;
   tags: string[];
   testCases: {
-    input: string;
+    input: object;
     output: string;
   }[];
-  solution: string;
+  solutions: {
+    language: string;
+    code: string;
+  }[];
+}
+
+export interface ILightProblem {
+  _id: string;
+  title: string;
+  difficulty: Difficulty;
+  tags: string[];
 }
 
 export enum Difficulty {
@@ -21,8 +31,16 @@ export enum Difficulty {
 
 const testCasesSchema = new Schema(
   {
-    input: String,
+    input: Object,
     output: String,
+  },
+  { _id: false },
+);
+
+const solutionsSchema = new Schema(
+  {
+    language: String,
+    code: String,
   },
   { _id: false },
 );
@@ -41,6 +59,7 @@ const problemSchema = new Schema<IProblem>(
     },
     tags: [String],
     testCases: [testCasesSchema],
+    solutions: [solutionsSchema],
   },
   { timestamps: true },
 );

@@ -1,11 +1,18 @@
 import { Request, Response } from 'express';
-import Problem, { IProblem } from '../models/problem.model';
+import Problem, { ILightProblem, IProblem } from '../models/problem.model';
 
 //#region METHOD GET
 
 export const getProblems = async (req: Request, res: Response): Promise<void> => {
   try {
-    const problems: IProblem[] = await Problem.find();
+    const problems: ILightProblem[] = await Problem.find(
+      {},
+      {
+        title: 1,
+        difficulty: 1,
+        tags: 1,
+      },
+    );
 
     res.status(200).send(problems);
   } catch (error: unknown) {

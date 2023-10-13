@@ -102,8 +102,17 @@ router.get('/problem/:id', problemController.getProblem);
  *                   type: object
  *                   properties:
  *                     input:
- *                       type: string
+ *                       type: object
  *                     output:
+ *                       type: string
+ *               solutions:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     language:
+ *                       type: string
+ *                     code:
  *                       type: string
  *       required:
  *         - title
@@ -151,8 +160,17 @@ router.post('/problem', problemController.createProblem);
  *                   type: object
  *                   properties:
  *                     input:
- *                       type: string
+ *                       type: object
  *                     output:
+ *                       type: string
+ *               solutions:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     language:
+ *                       type: string
+ *                     code:
  *                       type: string
  *     responses:
  *       '200':
