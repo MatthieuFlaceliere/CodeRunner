@@ -42,7 +42,7 @@ const testCasesSchema = new Schema(
 
 const solutionsSchema = new Schema(
   {
-    callResult: String,
+    callResult: { type: String, select: false },
     language: String,
     code: String,
   },

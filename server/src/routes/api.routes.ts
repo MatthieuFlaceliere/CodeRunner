@@ -110,6 +110,8 @@ router.get('/problem/:id', problemController.getProblem);
  *                 items:
  *                   type: object
  *                   properties:
+ *                     callResult:
+ *                       type: string
  *                     language:
  *                       type: string
  *                     code:

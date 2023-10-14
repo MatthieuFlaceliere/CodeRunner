@@ -62,7 +62,7 @@ const testCodeForProblem = async (req: Request, res: Response): Promise<void> =>
   if (!src || !lang || !id) res.status(400).send('Bad request');
 
   // Get problem test cases
-  const problem: IProblem | null = await Problem.findById(id);
+  const problem: IProblem | null = await Problem.findById(id).select('testCases baseCodes').exec();
   if (!problem) {
     res.status(404).send('Problem not found');
     return;
