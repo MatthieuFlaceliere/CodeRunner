@@ -12,9 +12,9 @@ const HOST_CONFIG = {
 
 export const runCodeInDocker = (src: string, lang: string): string => {
   let keyResult = '';
-  const createOptions = options(src, lang);
-  let stdoutData = '';
   keyResult = createKeyResult();
+  const createOptions = options(src, lang, keyResult);
+  let stdoutData = '';
 
   console.log(' Création du conteneur ');
   DockerClient.createContainer(createOptions, (err, container) => {
@@ -62,12 +62,12 @@ export const runCodeInDocker = (src: string, lang: string): string => {
             keyResult,
           );
 
-          // container.remove((err) => {
-          //   if (err) {
-          //     saveResultToRedis('Erreur lors de la suppression du conteneur');
-          //     return;
-          //   }
-          // });
+          container.remove((err) => {
+            if (err) {
+              saveResultToRedis('Erreur lors de la suppression du conteneur', keyResult);
+              return;
+            }
+          });
         });
       });
     });
@@ -76,31 +76,35 @@ export const runCodeInDocker = (src: string, lang: string): string => {
   return keyResult;
 };
 
-const options = (src: string, lang: string): object => {
+const options = (src: string, lang: string, key: string): object => {
   switch (lang) {
     case 'python':
       return {
         Image: 'python:3.8',
         Cmd: ['python', '-c', src],
         HostConfig: HOST_CONFIG,
+        name: key,
       };
     case 'javascript':
       return {
         Image: 'node:18',
         Cmd: ['node', '-e', src],
         HostConfig: HOST_CONFIG,
+        name: key,
       };
     case 'c':
       return {
         Image: 'frolvlad/alpine-gxx',
         Cmd: ['sh', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.c && gcc -o main main.c && ./main`],
         HostConfig: HOST_CONFIG,
+        name: key,
       };
     case 'cpp':
       return {
         Image: 'frolvlad/alpine-gxx',
         Cmd: ['sh', '-c', `echo "${src.replace(/"/g, '\\"')}" > main.cpp && g++ -o main main.cpp && ./main`],
         HostConfig: HOST_CONFIG,
+        name: key,
       };
     default:
       throw new Error('Langage non supporté');

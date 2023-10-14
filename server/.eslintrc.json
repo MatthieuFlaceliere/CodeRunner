@@ -10,5 +10,6 @@
     "ecmaVersion": "latest"
   },
   "plugins": ["@typescript-eslint"],
-  "rules": {}
+  "rules": {},
+  "ignorePatterns": ["node_modules/", "dist/", "src/testcode/"]
 }

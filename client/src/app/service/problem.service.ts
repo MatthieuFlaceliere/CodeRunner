@@ -28,4 +28,8 @@ export class ProblemService {
 
     return this.problem$;
   }
+
+  testCodeForProblem(id: string, src: string, lang: string): Observable<{ key: string }> {
+    return this.http.post<{ key: string }>(environment.apiBaseUrl + '/problem/' + id + '/testcode', { src, lang });
+  }
 }

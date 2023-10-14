@@ -6,7 +6,7 @@ export interface IProblem {
   tags: string[];
   testCases: {
     input: object;
-    output: string;
+    output: object;
   }[];
   baseCodes: {
     language: string;

@@ -32,6 +32,8 @@ import { ProblemService } from 'src/app/service/problem.service';
   ],
 })
 export class MainCodeForProblemComponent {
+  problemId: string | null = null;
+
   languagesList: Language[] = LanguagesList;
   selectedLanguage: Language = this.languagesList[0];
 
@@ -48,6 +50,7 @@ export class MainCodeForProblemComponent {
       next: (problem) => {
         this.code = problem.baseCodes.find((baseCode) => baseCode.language === this.selectedLanguage.key)?.code || '';
         this.baseCodes = problem.baseCodes;
+        this.problemId = problem._id;
       },
       error: (err) => console.log(err),
     });
@@ -67,5 +70,17 @@ export class MainCodeForProblemComponent {
     this.code = this.baseCodes.find((baseCode) => baseCode.language === this.selectedLanguage.key)?.code || '';
   }
 
-  runTests() {}
+  runTests() {
+    if (!this.problemId || !this.code || !this.selectedLanguage.key) {
+      return;
+    }
+    this.problemService.testCodeForProblem(this.problemId, this.code, this.selectedLanguage.key).subscribe({
+      next(res) {
+        console.log(res);
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
+  }
 }

@@ -104,7 +104,7 @@ router.get('/problem/:id', problemController.getProblem);
  *                     input:
  *                       type: object
  *                     output:
- *                       type: string
+ *                       type: object
  *               baseCodes:
  *                 type: array
  *                 items:
@@ -162,7 +162,7 @@ router.post('/problem', problemController.createProblem);
  *                     input:
  *                       type: object
  *                     output:
- *                       type: string
+ *                       type: object
  *               baseCodes:
  *                 type: array
  *                 items:
@@ -193,5 +193,33 @@ router.put('/problem/:id', problemController.modifyProblem);
  *         description: Successful request
  */
 router.delete('/problem/:id', problemController.deleteProblem);
+
+/**
+ * @openapi
+ * /api/problem/{id}/testcode:
+ *   post:
+ *     description: Test code against problem test cases
+ *     tags:
+ *       - Problem
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     requestBody:
+ *       description: Code to be tested
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               src:
+ *                 type: string
+ *               lang:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Successful code execution
+ */
+router.post('/problem/:id/testcode', problemController.testCodeForProblem);
 
 export default router;

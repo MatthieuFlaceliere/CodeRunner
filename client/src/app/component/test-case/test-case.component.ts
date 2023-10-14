@@ -55,7 +55,7 @@ import { ProblemService } from 'src/app/service/problem.service';
   ],
 })
 export class TestCaseComponent {
-  testCases: { input: object; output: string }[] = [];
+  testCases: { input: object; output: object }[] = [];
 
   constructor(private readonly problemService: ProblemService) {
     this.problemService.problem$.subscribe((problem: IProblem) => {

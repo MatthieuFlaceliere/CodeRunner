@@ -1,16 +1,19 @@
 import { Schema, model } from 'mongoose';
 
+export interface ITestCase {
+  input: object;
+  output: object;
+}
+
 export interface IProblem {
   _id: string;
   title: string;
   description: string;
   difficulty: Difficulty;
   tags: string[];
-  testCases: {
-    input: object;
-    output: string;
-  }[];
+  testCases: ITestCase[];
   baseCodes: {
+    callResult: string;
     language: string;
     code: string;
   }[];
@@ -32,13 +35,14 @@ export enum Difficulty {
 const testCasesSchema = new Schema(
   {
     input: Object,
-    output: String,
+    output: Object,
   },
   { _id: false },
 );
 
 const solutionsSchema = new Schema(
   {
+    callResult: String,
     language: String,
     code: String,
   },
