@@ -7,7 +7,7 @@ import { ProblemService } from 'src/app/service/problem.service';
   selector: 'app-problem-description',
   template: `
     <div class="card-header" *ngIf="title">{{ title }}</div>
-    <div class="card-body" *ngIf="description" [innerHTML]="description"></div>
+    <div class="card-body description" *ngIf="description" [innerHTML]="description"></div>
 
     <div class="card-header" *ngIf="!title">
       <ngx-skeleton-loader

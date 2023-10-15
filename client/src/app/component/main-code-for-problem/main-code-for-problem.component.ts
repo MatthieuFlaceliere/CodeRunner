@@ -74,13 +74,6 @@ export class MainCodeForProblemComponent {
     if (!this.problemId || !this.code || !this.selectedLanguage.key) {
       return;
     }
-    this.problemService.testCodeForProblem(this.problemId, this.code, this.selectedLanguage.key).subscribe({
-      next(res) {
-        console.log(res);
-      },
-      error(err) {
-        console.log(err);
-      },
-    });
+    this.problemService.testCodeForProblem(this.problemId, this.code, this.selectedLanguage.key);
   }
 }

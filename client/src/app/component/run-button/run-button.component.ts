@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CodeService } from 'src/app/service/code.service';
+import { ProblemService } from 'src/app/service/problem.service';
 
 @Component({
   selector: 'app-run-button',
@@ -32,6 +33,9 @@ import { CodeService } from 'src/app/service/code.service';
         opacity: 0.5;
         cursor: not-allowed;
       }
+      button:hover {
+        background-color: rgb(19, 209, 87);
+      }
       img {
         height: 100%;
       }
@@ -43,7 +47,8 @@ export class RunButtonComponent {
   @Input() text: string = 'Run';
   @Input() disabled: boolean = false;
 
-  constructor(private readonly codeService: CodeService) {
+  constructor(private readonly codeService: CodeService, private readonly problemService: ProblemService) {
     this.codeService.loading$.subscribe((loading) => (this.loading = loading));
+    this.problemService.loadingTestCode$.subscribe((loading) => (this.loading = loading));
   }
 }

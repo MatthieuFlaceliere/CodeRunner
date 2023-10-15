@@ -69,3 +69,18 @@ a {
     height: 25px;
   }
 }
+
+// Description style
+.card-body.description {
+  padding: 0 0.5rem;
+  code {
+    background: #002240;
+    border-radius: 0.5rem;
+    padding: 0.1rem 0.5rem;
+  }
+  pre {
+    background: #002240;
+    border-radius: 0.5rem;
+    padding: 0.4rem;
+  }
+}
