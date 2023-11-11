@@ -33,6 +33,16 @@ export class ProblemComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe((params) => {
       this.problemService.getProblem(params['problem-id']);
     });
+
+    this.problemService.testCodeResult$.subscribe((res) => {
+      if (JSON.parse(res.data).code != 0) {
+        this.openBottomCard();
+        this.selectedPane = 1;
+      } else {
+        this.openBottomCard();
+        this.selectedPane = 0;
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -48,6 +58,12 @@ export class ProblemComponent implements OnInit, OnDestroy {
       (this.bottom.nativeElement as HTMLElement).style.height = `calc(40% - 4px)`;
     }
     this.bottomCardIsOpen = !this.bottomCardIsOpen;
+  }
+
+  openBottomCard() {
+    this.bottomCardIsOpen = true;
+    (this.top.nativeElement as HTMLElement).style.height = `calc(60% - 4px)`;
+    (this.bottom.nativeElement as HTMLElement).style.height = `calc(40% - 4px)`;
   }
 
   onMouseDownVertical() {

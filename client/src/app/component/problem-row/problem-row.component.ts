@@ -6,9 +6,9 @@ import { IProblem } from 'src/app/models/problem';
   selector: 'app-problem-row',
   template: `
     <div class="row" [ngClass]="index % 2 === 0 ? 'light' : 'dark'" *ngIf="!skeleton">
-      <div class="col-4">{{ problem.title }}</div>
-      <div class="col-4" [appDifficultyColor]="problem.difficulty">{{ problem.difficulty }}</div>
-      <div class="col-4">
+      <div class="w-5">{{ problem.title }}</div>
+      <div class="w-2" [appDifficultyColor]="problem.difficulty">{{ problem.difficulty }}</div>
+      <div class="w-3">
         <!-- Display max 2 tags -->
         <span
           *ngFor="let tag of problem.tags; let i = index"
@@ -20,7 +20,7 @@ import { IProblem } from 'src/app/models/problem';
       </div>
     </div>
     <div class="row" [ngClass]="index % 2 === 0 ? 'light' : 'dark'" *ngIf="skeleton">
-      <div class="col-4">
+      <div class="w-5">
         <ngx-skeleton-loader
           [count]="1"
           [appearance]="appearance"
@@ -28,7 +28,7 @@ import { IProblem } from 'src/app/models/problem';
           [theme]="theme"
         ></ngx-skeleton-loader>
       </div>
-      <div class="col-4">
+      <div class="w-2">
         <ngx-skeleton-loader
           [count]="1"
           [appearance]="appearance"
@@ -36,7 +36,7 @@ import { IProblem } from 'src/app/models/problem';
           [theme]="theme"
         ></ngx-skeleton-loader>
       </div>
-      <div class="col-4">
+      <div class="w-3">
         <ngx-skeleton-loader
           [count]="1"
           [appearance]="appearance"
@@ -63,8 +63,14 @@ import { IProblem } from 'src/app/models/problem';
           height: 24px;
         }
       }
-      .col-4 {
-        width: 33.33%;
+      .w-5 {
+        width: 50%;
+      }
+      .w-3 {
+        width: 30%;
+      }
+      .w-2 {
+        width: 20%;
       }
       .light {
         background-color: var(--code-editor-bg);

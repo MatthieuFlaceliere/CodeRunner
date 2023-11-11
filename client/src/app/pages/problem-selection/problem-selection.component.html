@@ -2,15 +2,16 @@
   <div class="card">
     <div class="card-header">
       <h4 class="card-title">Problem Selection</h4>
+      <div class="end">
+        <button class="btn-refresh" (click)="refresh()">
+          <img src="assets/refresh.svg" alt="Refresh" />
+        </button>
+      </div>
     </div>
     <div class="card-body">
       <div class="problem-selection middle" *ngIf="!loading && errorMessage.length == 0">
-        <app-problem-row
-          *ngFor="let problem of problems; let i = index"
-          [problem]="problem"
-          [index]="i"
-          (click)="selectProblem(problem)"
-        ></app-problem-row>
+        <app-problem-row *ngFor="let problem of problems; let i = index" [problem]="problem" [index]="i"
+          (click)="selectProblem(problem)"></app-problem-row>
       </div>
       <div class="loading middle" *ngIf="loading && errorMessage.length == 0">
         <app-problem-row *ngFor="let index of [0, 1, 2]" [index]="index" [skeleton]="true"></app-problem-row>

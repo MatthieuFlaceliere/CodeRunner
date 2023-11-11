@@ -1,5 +1,7 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { ITestCaseResult } from 'src/app/models/problem';
 import { CodeService } from 'src/app/service/code.service';
+import { ProblemService } from 'src/app/service/problem.service';
 
 @Component({
   selector: 'app-output',
@@ -38,14 +40,31 @@ export class OutputComponent {
 
   @ViewChild('outputElement') outputElement!: ElementRef<HTMLPreElement>;
 
-  constructor(private readonly codeService: CodeService) {
+  constructor(
+    private readonly codeService: CodeService,
+    private readonly problemService: ProblemService,
+  ) {
     this.codeService.output$.subscribe((output) => {
       this.code = output.code;
       if (this.code !== 0) {
         this.output = output.stderr;
         this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 30, 30, 0.26)';
       } else {
+        this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 255, 255, 0)';
         this.output = output.stdout;
+      }
+    });
+
+    this.problemService.testCodeResult$.subscribe((res) => {
+      const data: ITestCaseResult = JSON.parse(res.data);
+
+      this.code = data.code;
+      if (this.code !== 0) {
+        this.output = data.stderr;
+        this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 30, 30, 0.26)';
+      } else {
+        this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 255, 255, 0)';
+        this.output = data.stdout;
       }
     });
   }

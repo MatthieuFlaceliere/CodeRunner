@@ -1,7 +1,4 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { CodeService } from './service/code.service';
-import { LanguagesList } from './models/languages';
-import { CodeResult } from './models/code';
 
 @Component({
   selector: 'app-root',

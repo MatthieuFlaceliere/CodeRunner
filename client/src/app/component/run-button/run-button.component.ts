@@ -47,7 +47,10 @@ export class RunButtonComponent {
   @Input() text: string = 'Run';
   @Input() disabled: boolean = false;
 
-  constructor(private readonly codeService: CodeService, private readonly problemService: ProblemService) {
+  constructor(
+    private readonly codeService: CodeService,
+    private readonly problemService: ProblemService,
+  ) {
     this.codeService.loading$.subscribe((loading) => (this.loading = loading));
     this.problemService.loadingTestCode$.subscribe((loading) => (this.loading = loading));
   }

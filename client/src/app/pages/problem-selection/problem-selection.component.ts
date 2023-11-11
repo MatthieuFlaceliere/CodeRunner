@@ -17,6 +17,10 @@ export class ProblemSelectionComponent {
     private readonly problemService: ProblemService,
     private readonly router: Router,
   ) {
+    this.getProblems();
+  }
+
+  getProblems() {
     this.problemService.getProblems().subscribe({
       next: (problems) => {
         this.problems = problems;
@@ -31,5 +35,10 @@ export class ProblemSelectionComponent {
 
   selectProblem(problem: IProblem) {
     this.router.navigate(['/problem', problem._id]);
+  }
+
+  refresh() {
+    this.loading = true;
+    this.getProblems();
   }
 }

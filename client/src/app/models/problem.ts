@@ -26,3 +26,15 @@ export enum Difficulty {
   Medium = 'medium',
   Hard = 'hard',
 }
+
+export interface ITestCaseResult {
+  test_case: {
+    [key: number]: {
+      result: string;
+      output: string;
+    };
+  };
+  stdout: string;
+  stderr: string;
+  code: number;
+}
