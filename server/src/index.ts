@@ -12,7 +12,9 @@ import { hydrateDBService } from './services/hydrateDB.service';
 
 dotenv.config();
 
-export const RedisClient = createClient();
+export const RedisClient = createClient({
+  url: 'redis://' + process.env.REDIS_HOST + ':' + process.env.REDIS_PORT,
+});
 export const DockerClient = new Docker();
 
 const main = async () => {
