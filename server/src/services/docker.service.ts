@@ -18,19 +18,19 @@ export const runCodeInDocker = (src: string, lang: string): string => {
 
   DockerClient.createContainer(createOptions, (err, container) => {
     if (err || !container) {
-      saveResultToRedis('Erreur lors de la création du conteneur', keyResult);
+      saveResultToRedis(`Erreur lors de la création du conteneur: ${err?.message}`, keyResult);
       return;
     }
 
     container.start((err) => {
       if (err) {
-        saveResultToRedis('Erreur lors du démarrage du conteneur', keyResult);
+        saveResultToRedis(`Erreur lors du démarrage du conteneur: ${err?.message}`, keyResult);
         return;
       }
 
       container.attach({ stream: true, stdout: true, stderr: true }, (err, stream) => {
         if (err || !stream) {
-          saveResultToRedis("Erreur lors de l'attachement du conteneur", keyResult);
+          saveResultToRedis(`Erreur lors de l'attachement du conteneur: ${err?.message}`, keyResult);
           return;
         }
 
@@ -40,7 +40,7 @@ export const runCodeInDocker = (src: string, lang: string): string => {
 
         container.wait((err, data) => {
           if (err) {
-            saveResultToRedis("Erreur lors de l'exécution du conteneur", keyResult);
+            saveResultToRedis(`Erreur lors de l'attente du conteneur: ${err?.message}`, keyResult);
             return;
           }
 
@@ -55,7 +55,7 @@ export const runCodeInDocker = (src: string, lang: string): string => {
 
           container.remove((err) => {
             if (err) {
-              saveResultToRedis('Erreur lors de la suppression du conteneur', keyResult);
+              saveResultToRedis(`Erreur lors de la suppression du conteneur: ${err?.message}`, keyResult);
               return;
             }
           });

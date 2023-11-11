@@ -40,7 +40,7 @@ export class CodeService {
   }
 
   getCodeResult(url: string) {
-    this.http.get<ResultCodeSuccess>(url).subscribe({
+    this.http.get<ResultCodeSuccess>(environment.apiBaseUrl + url).subscribe({
       next: (res) => {
         if (res.data === null) {
           setTimeout(() => this.getCodeResult(url), 1000);

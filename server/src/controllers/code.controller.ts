@@ -9,7 +9,7 @@ export const runCode = (req: Request, res: Response): void => {
   try {
     const keyResult = runCodeInDocker(src, lang);
 
-    const url = `${req.protocol}://${req.get('host')}/api/code/result/${keyResult}`;
+    const url = `/code/result/${keyResult}`;
 
     res.status(202).send(successResponse(url));
   } catch (error: unknown) {

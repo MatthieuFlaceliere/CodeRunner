@@ -53,7 +53,7 @@ export class ProblemService {
   }
 
   getCodeResult(url: string) {
-    this.http.get<RunCodeSuccess>(url).subscribe({
+    this.http.get<RunCodeSuccess>(environment.apiBaseUrl + url).subscribe({
       next: (res) => {
         if (res.data === null) {
           setTimeout(() => this.getCodeResult(url), 1000);

@@ -77,7 +77,7 @@ const testCodeForProblem = async (req: Request, res: Response): Promise<void> =>
 
   const keyResult = await testCode(src, lang, baseCode.codeForTest);
 
-  const url = `${req.protocol}://${req.get('host')}/api/problem/${id}/testcode/result/${keyResult}`;
+  const url = `/problem/${id}/testcode/result/${keyResult}`;
 
   res.status(200).send(successResponse(url));
 };
