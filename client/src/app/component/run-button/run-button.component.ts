@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { CodeService } from 'src/app/service/code.service';
+import { ProblemService } from 'src/app/service/problem.service';
 
 @Component({
   selector: 'app-run-button',
   template: `
-    <button type="button">
+    <button type="button" [disabled]="disabled">
       <img *ngIf="loading" src="assets/loading.svg" alt="loading" />
-      <span *ngIf="!loading">Run</span>
+      <span *ngIf="!loading">{{ text }}</span>
     </button>
   `,
   styles: [
@@ -16,7 +17,6 @@ import { CodeService } from 'src/app/service/code.service';
         padding-right: 1.25rem;
         border-radius: 0.5rem;
         border: 0px;
-        width: 5rem;
         font-size: 0.875rem;
         line-height: 1.25rem;
         font-weight: 700;
@@ -29,6 +29,13 @@ import { CodeService } from 'src/app/service/code.service';
         justify-content: center;
         align-items: center;
       }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      button:hover {
+        background-color: rgb(19, 209, 87);
+      }
       img {
         height: 100%;
       }
@@ -37,8 +44,14 @@ import { CodeService } from 'src/app/service/code.service';
 })
 export class RunButtonComponent {
   loading!: boolean;
+  @Input() text: string = 'Run';
+  @Input() disabled: boolean = false;
 
-  constructor(private readonly codeService: CodeService) {
+  constructor(
+    private readonly codeService: CodeService,
+    private readonly problemService: ProblemService,
+  ) {
     this.codeService.loading$.subscribe((loading) => (this.loading = loading));
+    this.problemService.loadingTestCode$.subscribe((loading) => (this.loading = loading));
   }
 }

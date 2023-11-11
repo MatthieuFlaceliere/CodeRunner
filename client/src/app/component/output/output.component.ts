@@ -1,36 +1,16 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { ITestCaseResult } from 'src/app/models/problem';
 import { CodeService } from 'src/app/service/code.service';
+import { ProblemService } from 'src/app/service/problem.service';
 
 @Component({
   selector: 'app-output',
   template: `
-    <div class="header">Output</div>
+    <div class="card-header" *ngIf="header">Output</div>
     <pre #outputElement>{{ output }}</pre>
   `,
   styles: [
     `
-      :host {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 100%;
-        background-color: var(--code-editor-bg);
-        border-radius: 0.5rem;
-      }
-
-      .header {
-        background-color: var(--primary);
-        color: var(--color-primary);
-        padding: 6px 10px;
-        border-radius: 0.5rem 0.5rem 0 0;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 0.7px solid #e4f0ff63;
-        height: 25px;
-      }
-
       pre {
         padding: 7px;
         margin: 10px;
@@ -56,16 +36,35 @@ export class OutputComponent {
   output!: string;
   code!: number;
 
+  @Input() header: boolean = true;
+
   @ViewChild('outputElement') outputElement!: ElementRef<HTMLPreElement>;
 
-  constructor(private readonly codeService: CodeService) {
+  constructor(
+    private readonly codeService: CodeService,
+    private readonly problemService: ProblemService,
+  ) {
     this.codeService.output$.subscribe((output) => {
       this.code = output.code;
       if (this.code !== 0) {
         this.output = output.stderr;
         this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 30, 30, 0.26)';
       } else {
+        this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 255, 255, 0)';
         this.output = output.stdout;
+      }
+    });
+
+    this.problemService.testCodeResult$.subscribe((res) => {
+      const data: ITestCaseResult = JSON.parse(res.data);
+
+      this.code = data.code;
+      if (this.code !== 0) {
+        this.output = data.stderr;
+        this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 30, 30, 0.26)';
+      } else {
+        this.outputElement.nativeElement.style.backgroundColor = 'rgba(255, 255, 255, 0)';
+        this.output = data.stdout;
       }
     });
   }

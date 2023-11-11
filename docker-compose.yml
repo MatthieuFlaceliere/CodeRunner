@@ -1,5 +1,5 @@
 version: "3"
-name: CodeRunner
+name: code-runner
 services:
   redis:
     image: redis
@@ -8,5 +8,26 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  code-runner:
+    build: ./server
+    container_name: code-runner
+    ports:
+      - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ./server/.env.prod
+    depends_on:
+      - redis
+      - mongo
+
 volumes:
   redis-data:
+  mongo-data:
