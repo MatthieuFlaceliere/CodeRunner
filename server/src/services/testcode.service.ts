@@ -1,55 +1,48 @@
-import fs from 'fs';
 import { runCodeInDocker } from './docker.service';
-import { ITestCase } from '../models/problem.model';
+import { ICodeResult } from '../models/code.model';
+import { ITestCaseResult } from '../models/problem.model';
 
-const BASE_PATH = './src/testcode';
+const REGEX_TEST_CASE = /TEST_CASE_\d+\|[^|]+\|(PASSED|FAILED)/;
 
-export const testCode = async (src: string, lang: string, testCases: ITestCase[], callResult: string): Promise<string> => {
+export const testCode = async (userCode: string, lang: string, codeForTest: string): Promise<string> => {
+  const codeParsedForTest = parseCodeForTest(userCode, lang, codeForTest);
 
-  const codeParsedForTest = parseCodeForTest(src, lang, testCases, callResult);
-  
   return runCodeInDocker(codeParsedForTest, lang);
 };
 
-const parseCodeForTest = (src: string, lang: string, testCases: ITestCase[], callResult: string): string => {
-  switch (lang) {
-    case 'javascript':
-      return parseForJavascript(src, testCases, callResult);
-    case 'python':
-      return parseForPython(src, testCases, callResult);
-    default:
-      return '';
-  }
-}
+export const parseResult = (noParsedResult: string): string => {
+  const result = JSON.parse(noParsedResult) as ICodeResult;
 
-const parseForJavascript = (src: string, testCases: ITestCase[], callResult: string): string => {
-  let code = '';
-  try {
-    const data = fs.readFileSync(`${BASE_PATH}/javascript.js`, 'utf8');
+  if (result.code !== 0) return noParsedResult;
 
-    code = data.replace('FUNCTION', src);
-    code = code.replace('TEST_CASES', `testCases = ${JSON.stringify(testCases)};`);
-    code = code.replace('CALL_FUNCTION', callResult);
+  const resultParsed = {
+    test_case: {},
+    stdout: result.stdout,
+    stderr: result.stderr,
+    code: result.code,
+  } as ITestCaseResult;
 
-  } catch (err) {
-    console.error("Erreur de lecture du fichier d'entrée:", err);
-  }
-  
-  return code;
-}
+  const lines = result.stdout.split('\n').filter((line) => line !== '');
 
-const parseForPython = (src: string, testCases: ITestCase[], callResult: string): string => {
-  let code = '';
-  try {
-    const data = fs.readFileSync(`${BASE_PATH}/python.py`, 'utf8');
+  let newStdout = '';
+  lines.forEach((line) => {
+    if (REGEX_TEST_CASE.test(line)) {
+      const elements = line.split('|');
+      const testCaseIndex = parseInt(elements[0].split('_')[2]);
+      const testCaseOutput = elements[1];
+      const testCaseResult = elements[2];
 
-    code = data.replace('FUNCTION', src);
-    code = code.replace('TEST_CASES', `testCases = ${JSON.stringify(testCases)};`);
-    code = code.replace('CALL_FUNCTION', callResult);
+      resultParsed.test_case[testCaseIndex] = { result: testCaseResult, output: testCaseOutput };
+    } else {
+      newStdout += `${line}\n`;
+    }
+  });
 
-  } catch (err) {
-    console.error("Erreur de lecture du fichier d'entrée:", err);
-  }
-  
-  return code;
-}
+  resultParsed.stdout = newStdout;
+
+  return JSON.stringify(resultParsed);
+};
+
+const parseCodeForTest = (userCode: string, lang: string, codeForTest: string): string => {
+  return codeForTest.replace('USER_CODE', userCode);
+};

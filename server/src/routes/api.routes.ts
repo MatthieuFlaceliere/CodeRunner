@@ -224,4 +224,23 @@ router.delete('/problem/:id', problemController.deleteProblem);
  */
 router.post('/problem/:id/testcode', problemController.testCodeForProblem);
 
+/**
+ * @openapi
+ * /api/problem/{id}/testcode/result/{key}:
+ *  get:
+ *    description: Get code result
+ *    tags: [Problem]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *      - in: path
+ *        name: key
+ *        required: true
+ *    responses:
+ *       '200':
+ *         description: Successful code execution
+ */
+router.get('/problem/:id/testcode/result/:key', problemController.testCodeForProblemResult);
+
 export default router;

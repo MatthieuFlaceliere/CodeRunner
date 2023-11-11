@@ -1,5 +1,17 @@
 import { Schema, model } from 'mongoose';
 
+export interface ITestCaseResult {
+  test_case: {
+    [key: number]: {
+      result: string;
+      output: string;
+    };
+  };
+  stdout: string;
+  stderr: string;
+  code: number;
+}
+
 export interface ITestCase {
   input: object;
   output: object;
@@ -13,7 +25,7 @@ export interface IProblem {
   tags: string[];
   testCases: ITestCase[];
   baseCodes: {
-    callResult: string;
+    codeForTest: string;
     language: string;
     code: string;
   }[];
@@ -42,7 +54,7 @@ const testCasesSchema = new Schema(
 
 const solutionsSchema = new Schema(
   {
-    callResult: { type: String, select: false },
+    codeForTest: { type: String, select: false },
     language: String,
     code: String,
   },
