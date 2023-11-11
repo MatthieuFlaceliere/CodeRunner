@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { IProblem } from '../models/problem';
-import { environment } from 'src/environments/environment.development';
 import { RunCodeSuccess } from '../models/code';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
