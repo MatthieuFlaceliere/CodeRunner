@@ -10,7 +10,7 @@ Sandbox
 
 ![CodeRunner Sandbox](./img/coderunner_2.gif)
 
-Letcode clone
+Leetcode clone
   - Select a problem from a list of problems
   - Solve problems in multiple languages (Python, Javascript)
   - Submit your solution to check if it's correct
